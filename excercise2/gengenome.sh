@@ -8,7 +8,7 @@ num_char=100
 for i in {0..500}
 do
 	line=""
-	for i in {0..100}
+	for i in {0..99}
 	do 
 	choice=$((RANDOM % 4))
 	line+=${letters[choice]}

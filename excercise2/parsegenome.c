@@ -1,6 +1,5 @@
 #include <stdio.h>
-#include <string.h>
-
+#include <stdlib.h>
 
 int main ( int argc, char** args ){
 	/*
@@ -11,15 +10,13 @@ int main ( int argc, char** args ){
 	
 
 	if( argc != 2){
-		printf("Program use: ./a.out <filePath> );
+		printf("Program use: ./a.out <filePath>");
 	} else {
 
-		string arg1 = args[1];
-		string arg2 = args[2];
 
-		printf("Argument 1 : %s , Argument 2 : %s \n", args[0], args[1]);
+		printf("Argument 1 : %s\n", args[1]);
 		
-		FILE* genomeFile = fopen(arg1, 'r' );
+		FILE* genomeFile = fopen(args[1], "r" );
 		/*
 		* File specification/requirements
 		* The file must contain:
@@ -35,13 +32,52 @@ int main ( int argc, char** args ){
 		// step 5: if not okay close file and program exits (-1)
 		// step 6: if okay close file and program exits (0)
 		
+		const int LINESIZE = 101;
+		unsigned int A = 0, G = 0, C = 0, T = 0;
+		printf("start count: %i , %i , %i , %i\n" , A, C, G, T);
+		for ( int i = 0; i < 500 ; i++){
+			char line[LINESIZE];
+			int bytesRead = fread(line, sizeof *line, LINESIZE, genomeFile);
+			if( bytesRead != LINESIZE ){
+				printf("Could only read %i bytes", bytesRead);
+				goto FAILURE;
+			}
 		
+			for ( int j = 0; j < 100; j++ ) {
+				if( line[j] == 'A') {
+					A ++;
+					continue;
+				}
+				if( line[j] == 'C' ) {
+					C ++;
+					continue;
+				}
+				if( line[j] == 'G' ){
+					G ++;
+					continue;
+				}
+				if( line[j] == 'T' ) {
+					T ++;
+					continue;
+				}
+				printf("line %i character %i: %s is not valid.",i,j,line[j]);
+				goto FAILURE;
+			} 				
 
-
-
+			if( line[100] != '\n') {
+				printf("Read %c instead of newline ", line[100]);
+				goto FAILURE;
+			}
+		}
+		
 		fclose (genomeFile);
+
+		printf("Counted A's %i\nCounted C's %i\nCounted G's %i\nCounted T's %i\n" ,A ,C ,G ,T);
 		exit(0);
+		
+		FAILURE:
+			fclose(genomeFile);
+			exit(-1);
 
 	}
-
 }
