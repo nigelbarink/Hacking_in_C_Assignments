@@ -14,9 +14,13 @@ int main (int argc , char** argv ){
 	}
 
 	while ( 1 ){
-		
-		printf("Read 0x%x from /dev/urandom\n", fgetc(fp));
-		int goAgain ; 
-		scanf("%d", &goAgain);
+		char random =  fgetc(fp);	
+		if ( random == 42 ){
+			break;
+		}
+		printf("Read 0x%x %u %d from /dev/urandom\n", random, random , random);
+	//	getchar();	
+
 	}
+	fclose(fp);
 }
